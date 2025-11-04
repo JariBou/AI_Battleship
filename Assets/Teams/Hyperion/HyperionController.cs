@@ -9,9 +9,12 @@ namespace HyperionTeam {
 	public class HyperionController : BaseSpaceShipController
 	{
 		private BehaviorTree _behaviorTree;
+		private WaypointPathingHelper _waypointPathingHelper;
 
 		public override void Initialize(SpaceShipView spaceship, GameData data)
 		{
+			_waypointPathingHelper = new WaypointPathingHelper();
+			_waypointPathingHelper.Initialize(data);
 			_behaviorTree = GetComponent<BehaviorTree>();
 			_behaviorTree.SetVariableValue("GameData", data);
 			_behaviorTree.SetVariableValue("Owner", spaceship.Owner);
@@ -24,8 +27,12 @@ namespace HyperionTeam {
 			
 			
 			SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
-			float thrust = 1.0f;
-			float targetRotation = spaceship.Orientation + 90.0f;
+			Vector2 closestWaypoint = _waypointPathingHelper.GetClosestWaypoint(spaceship.Position, spaceship.Owner);
+			// float thrust = 1.0f;
+			float thrust = .0f;
+			Debug.Log($"Vector: {closestWaypoint}");
+			float targetRotation = spaceship.Orientation;
+			// float targetRotation = spaceship.Orientation + 90.0f;
 			
 			
 			// float targetRotation = (float)_behaviorTree.GetVariable("TargetRotation").GetValue();
