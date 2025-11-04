@@ -20,14 +20,16 @@ namespace HyperionTeam {
 			_behaviorTree.SetVariableValue("Owner", spaceship.Owner);
 			_behaviorTree.SetVariableValue("RemainingTime", data.timeLeft);
 			_behaviorTree.SetVariableValue("Orientation", spaceship.Orientation);
+			_behaviorTree.SetVariableValue("ShipPosition", spaceship.Position);
 		}
 
 		public override InputData UpdateInput(SpaceShipView spaceship, GameData data)
 		{
 			_behaviorTree.SetVariableValue("RemainingTime", data.timeLeft);
 			_behaviorTree.SetVariableValue("Orientation", spaceship.Orientation);
+            _behaviorTree.SetVariableValue("ShipPosition", spaceship.Position);
 
-			SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
+            SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
 			Vector2 closestWaypoint = _waypointPathingHelper.GetClosestWaypoint(spaceship.Position, spaceship.Owner);
 			// float thrust = 1.0f;
 			float thrust = .0f;
