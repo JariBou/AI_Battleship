@@ -16,17 +16,17 @@ namespace HyperionTeam {
 			_behaviorTree.SetVariableValue("GameData", data);
 			_behaviorTree.SetVariableValue("Owner", spaceship.Owner);
 			_behaviorTree.SetVariableValue("RemainingTime", data.timeLeft);
+			_behaviorTree.SetVariableValue("Orientation", spaceship.Orientation);
 		}
 
 		public override InputData UpdateInput(SpaceShipView spaceship, GameData data)
 		{
 			_behaviorTree.SetVariableValue("RemainingTime", data.timeLeft);
-			
-			
+			_behaviorTree.SetVariableValue("Orientation", spaceship.Orientation);
+
 			SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
 			float thrust = 1.0f;
 			float targetRotation = spaceship.Orientation + 90.0f;
-			
 			
 			// float targetRotation = (float)_behaviorTree.GetVariable("TargetRotation").GetValue();
 			bool needShoot = AimingHelpers.CanHit(spaceship, otherSpaceship.Position, otherSpaceship.Velocity, 0.15f);
