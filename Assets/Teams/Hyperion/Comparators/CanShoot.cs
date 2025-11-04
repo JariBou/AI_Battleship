@@ -14,7 +14,15 @@ namespace HyperionTeam.Comparators
             SpaceShipView spaceShipForOwner = gameData.GetSpaceShipForOwner(ownerId);
             SpaceShipView spaceShipTarget = gameData.GetSpaceShipForOwner(1 - ownerId);
 
-            bool canHit = AimingHelpers.CanHit(spaceShipForOwner, spaceShipTarget.Position, spaceShipTarget.Velocity, 0.15f);
+            bool canHit;
+            if (spaceShipTarget.Velocity.sqrMagnitude == 0)
+            {
+                canHit = AimingHelpers.CanHit(spaceShipForOwner, spaceShipTarget.Position, 0.15f);
+            }
+            else
+            {
+                canHit = AimingHelpers.CanHit(spaceShipForOwner, spaceShipTarget.Position, spaceShipTarget.Velocity, 0.15f);
+            }
 
             return canHit ? TaskStatus.Success : TaskStatus.Failure;
         }
