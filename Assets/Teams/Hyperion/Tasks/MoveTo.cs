@@ -30,14 +30,14 @@ public class MoveTo : Action
 		_target = (SharedTransform)Owner.GetVariable("Target");
 		_raycastRange = (SharedFloat)Owner.GetVariable("RaycastDodgingRange");
 		_layerMask = (SharedLayerMask)Owner.GetVariable("AsteroidMask");
-        _shipPosition = (SharedVector2)Owner.GetVariable("ShipPosition");
+        _shipPosition = (SharedVector2)Owner.GetVariable("o_ShipPosition");
 
         base.OnStart();
 	}
 
 	public override TaskStatus OnUpdate()
 	{
-        _shipPosition = (SharedVector2)Owner.GetVariable("ShipPosition");
+        _shipPosition = (SharedVector2)Owner.GetVariable("o_ShipPosition");
 
         RaycastHit hitForwardRight;
 		bool isHitForwardRight = Physics.Raycast(_shipPosition.Value, _dirForwardRight, out hitForwardRight, _raycastRange.Value, _layerMask.Value);
