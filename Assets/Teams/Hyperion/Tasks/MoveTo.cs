@@ -14,7 +14,7 @@ public class MoveTo : Action
     public SharedFloat thrust;
     public SharedFloat _rotationSpeed;
 
-	public SharedVector2 _target;
+	public SharedVector2 Target;
 	private SharedFloat _raycastRange;
     private SharedLayerMask _layerMask;
     private SharedVector2 _shipPosition;
@@ -33,7 +33,7 @@ public class MoveTo : Action
 
 	public override void OnStart()
 	{
-        _target = (SharedVector2)Owner.GetVariable("Target");
+        // _target = (SharedVector2)Owner.GetVariable("Target");
         //_target = GameObject.Find("WayPoint (9)").transform;
 		_raycastRange = (SharedFloat)Owner.GetVariable("RaycastDodgingRange");
 		_layerMask = (SharedLayerMask)Owner.GetVariable("AsteroidMask");
@@ -146,9 +146,9 @@ public class MoveTo : Action
 
         if (!hitForwardRight && !hitForwardLeft && !hitForward && !hitRight && !hitLeft)
         {
-            float angle = Vector2.SignedAngle(Vector2.right, (Vector2)_target.Value - _shipPosition.Value);
+            float angle = Vector2.SignedAngle(Vector2.right, (Vector2)Target.Value - _shipPosition.Value);
             Debug.Log(angle);
-            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, _target.Value));
+            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, Target.Value));
             thrust = 1;
         }
 
