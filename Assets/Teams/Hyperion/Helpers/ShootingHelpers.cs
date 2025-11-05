@@ -81,6 +81,25 @@ namespace HyperionTeam.Helpers
             return Vector2.Angle(shootDirection, spaceshipToTarget) < angleTolerance;
         }
         
+        public static bool CanHit(SpaceShipView spaceship, Vector2 targetPosition, out float angleDiff)
+        {
+            float shootAngle = Mathf.Deg2Rad * spaceship.Orientation;
+            Vector2 shootDirection = new Vector2(Mathf.Cos(shootAngle), Mathf.Sin(shootAngle));
+            Vector2 spaceshipToTarget = targetPosition - spaceship.Position;
+            angleDiff = 0f;
+            RaycastHit2D[] raycastAll = Physics2D.RaycastAll(spaceship.Position, spaceshipToTarget.normalized, spaceshipToTarget.magnitude);
+            foreach (RaycastHit2D hit2D in raycastAll)
+            {
+                if (hit2D.collider.CompareTag("Asteroid"))
+                {
+                    return false;
+                }
+            }
+
+            angleDiff = Vector2.Angle(shootDirection, spaceshipToTarget);
+            return true;
+        }
+        
         public static bool CanHit(SpaceShipView spaceship, Vector2 targetPosition, Vector2 targetVelocity, float hitTimeTolerance)
         {                
             if(hitTimeTolerance <= 0) {

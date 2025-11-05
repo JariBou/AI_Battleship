@@ -17,21 +17,22 @@ namespace HyperionTeam {
 			_behaviorTree = GetComponent<BehaviorTree>();
 			_behaviorTree.SetVariableValue("o_GameData", data);
 			_behaviorTree.SetVariableValue("o_Owner", spaceship.Owner);
-			_actionCooldowns.Add("shoot", 0f);
-			_actionCooldowns.Add("mine", 0f);
-			_actionCooldowns.Add("shockwave", 0f);
+	
 			UpdateBlackboardData(spaceship, data);
 		}
 
 		public override InputData UpdateInput(SpaceShipView spaceship, GameData data)
 		{
 			UpdateBlackboardData(spaceship, data);
-
-			foreach (string key in _actionCooldowns.Keys)
+			SharedVariable shootCooldown = _behaviorTree.GetVariable("d_ShootCooldown");
+			SharedVariable shockwaveCooldown = _behaviorTree.GetVariable("d_ShockwaveCooldown");
+			SharedVariable mineCooldown = _behaviorTree.GetVariable("d_MineCooldown");
+			
+			foreach (SharedVariable key in new []{shootCooldown, shockwaveCooldown, mineCooldown})
 			{
-				if (_actionCooldowns[key] > 0f)
+				if ((float)key.GetValue() > 0f)
 				{
-					_actionCooldowns[key] -= Time.deltaTime;
+					key.SetValue((float)key.GetValue() - Time.deltaTime);
 				}
 			}
 			
@@ -39,20 +40,29 @@ namespace HyperionTeam {
 			Vector2 closestWaypoint = WaypointPathingHelper.Instance.GetClosestWaypoint(spaceship.Position, spaceship.Owner);
 			Debug.Log($"Vector: {closestWaypoint}");
 			// float targetRotation = spaceship.Orientation + 90.0f;
-			
-			bool canShoot = _actionCooldowns["shoot"] <= 0f;
+
+			// (float)_behaviorTree.GetVariable("o_ShootCooldown");
 			
 			// needShoot = AimingHelpers.CanHit(spaceship, otherSpaceship.Position, otherSpaceship.Velocity, 0.15f);
-			bool canHit = (bool)_behaviorTree.GetVariable("i_CanHit").GetValue();
+			bool wantsToShoot = (bool)_behaviorTree.GetVariable("i_CanHit").GetValue();
+			bool wantsToShockwave = (bool)_behaviorTree.GetVariable("i_WantsToShockwave").GetValue();
+			bool wantsToMine = (bool)_behaviorTree.GetVariable("i_WantsToMine").GetValue();
             float thrust = (float)_behaviorTree.GetVariable("i_Thrust").GetValue();
             float targetOrient = (float)_behaviorTree.GetVariable("i_TargetOrientation").GetValue();
 
-            bool shouldShoot = canHit && canShoot;
-            if (shouldShoot)
+            if (wantsToShoot)
             {
-	            _actionCooldowns["shoot"] = spaceship.StunPenaltyDuration;
+	            shootCooldown.SetValue(spaceship.StunPenaltyDuration);
             }
-            return new InputData(thrust, targetOrient, shouldShoot, false, false);
+            if (wantsToShockwave)
+            {
+	            shockwaveCooldown.SetValue(1f);
+            }
+            if (wantsToMine)
+            {
+	            mineCooldown.SetValue(1f);
+            }
+            return new InputData(thrust, targetOrient, wantsToShoot, wantsToMine, wantsToShockwave);
 		}
 
 		private void UpdateBlackboardData(SpaceShipView spaceship, GameData data)
@@ -66,6 +76,11 @@ namespace HyperionTeam {
 			_behaviorTree.SetVariableValue("o_CurrentScore", GameManager.Instance.GetScoreForPlayer(spaceship.Owner));
 			_behaviorTree.SetVariableValue("o_DistanceToEnemy", (spaceship.Position - otherSpaceship.Position).magnitude);
 			_behaviorTree.SetVariableValue("o_EnemyEnergy", otherSpaceship.Energy);
+				
+			_behaviorTree.SetVariableValue("d_ShootCooldown", 0f);
+			_behaviorTree.SetVariableValue("d_ShockwaveCooldown", 0f);
+			_behaviorTree.SetVariableValue("d_MineCooldown", 0f);
+			
 		}
 	}
 
