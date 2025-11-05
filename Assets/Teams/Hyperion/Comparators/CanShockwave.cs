@@ -1,7 +1,4 @@
-﻿using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
-using DoNotModify;
-using HyperionTeam.SharedVariables;
+﻿using BehaviorDesigner.Runtime.Tasks;
 
 namespace HyperionTeam.Comparators
 {

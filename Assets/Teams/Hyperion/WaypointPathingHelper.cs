@@ -7,6 +7,10 @@ namespace HyperionTeam
 {
     public class WaypointPathingHelper
     {
+        private static WaypointPathingHelper instance;
+
+        public static WaypointPathingHelper Instance => instance ??= new WaypointPathingHelper();
+
         private GameData _gameData;
         private Dictionary<WayPointView, Dictionary<WayPointView, float>> _waypointPathing = new();
 
@@ -28,6 +32,12 @@ namespace HyperionTeam
 
         public Vector2 GetClosestWaypoint(Vector2 position, int owner, int depth = 4)
         {
+            Path nextPath = GetNextPath(position, owner, depth);
+            return nextPath.IsValid ? nextPath.First().Position : position;
+        }
+        
+        public Path GetNextPath(Vector2 position, int owner, int depth = 4)
+        {
             Dictionary<WayPointView, Path> paths = new();
             for (int i = 0; i < _waypointPathing.Keys.Count; i++)
             {
@@ -44,17 +54,17 @@ namespace HyperionTeam
                 }
             }
             float maxDistance = float.MaxValue;
-            WayPointView closestWaypoint = null;
+            Path closestPath = null;
             foreach (var (waypoint, path) in paths)
             {
                 if (path.PathLength < maxDistance)
                 {
                     maxDistance = path.PathLength;
-                    closestWaypoint = waypoint;
+                    closestPath = path;
                 }
             }
             
-            return closestWaypoint?.Position ?? position;
+            return closestPath ?? new Path();
         }
 
         private void AddNextClosestWaypointToPAth(ref Path path, int owner)
@@ -86,5 +96,12 @@ namespace HyperionTeam
     {
         public List<WayPointView> WayPoints { get; set; } = new();
         public float PathLength { get; set; } = 0;
+        
+        public bool IsValid => WayPoints.Count > 0;
+
+        public WayPointView First()
+        {
+            return WayPoints[0];
+        }
     }
 }
