@@ -1,6 +1,7 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using DoNotModify;
+using HyperionTeam.Helpers;
 
 namespace HyperionTeam.Comparators
 {
@@ -20,15 +21,15 @@ namespace HyperionTeam.Comparators
             bool canHit;
             if (spaceShipTarget.Velocity.sqrMagnitude == 0)
             {
-                canHit = AimingHelpers.CanHit(spaceShipForOwner, spaceShipTarget.Position, AngleTolerance.Value);
+                canHit = ShootingHelpers.CanHit(spaceShipForOwner, spaceShipTarget.Position, AngleTolerance.Value);
             }
             else
             {
-                canHit = AimingHelpers.CanHit(spaceShipForOwner,
+                canHit = ShootingHelpers.CanHit(spaceShipForOwner,
                              spaceShipTarget.Position,
                              spaceShipTarget.Velocity,
                              HitTimeTolerance.Value) ||
-                         AimingHelpers.CanHit(spaceShipForOwner,
+                         ShootingHelpers.CanHit(spaceShipForOwner,
                              spaceShipTarget.Position,
                              AngleTolerance.Value);
             }
