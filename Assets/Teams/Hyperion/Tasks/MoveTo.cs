@@ -14,7 +14,7 @@ public class MoveTo : Action
     public SharedFloat thrust;
     public SharedFloat _rotationSpeed;
 
-	public SharedTransform _target;
+	public SharedVector2 _target;
 	private SharedFloat _raycastRange;
     private SharedLayerMask _layerMask;
     private SharedVector2 _shipPosition;
@@ -33,8 +33,8 @@ public class MoveTo : Action
 
 	public override void OnStart()
 	{
-        //_target = (SharedTransform)Owner.GetVariable("Target");
-        _target = GameObject.Find("WayPoint (9)").transform;
+        _target = (SharedVector2)Owner.GetVariable("Target");
+        //_target = GameObject.Find("WayPoint (9)").transform;
 		_raycastRange = (SharedFloat)Owner.GetVariable("RaycastDodgingRange");
 		_layerMask = (SharedLayerMask)Owner.GetVariable("AsteroidMask");
         _shipPosition = (SharedVector2)Owner.GetVariable("o_ShipPosition");
@@ -138,7 +138,6 @@ public class MoveTo : Action
 
             Debug.Log(closestRaycast.IsValid);
 
-
         if (closestRaycast.IsValid)
         {
             Owner.SetVariableValue("i_TargetOrientation", _shipOrientation.Value + closestRaycast.Angle);
@@ -147,9 +146,9 @@ public class MoveTo : Action
 
         if (!hitForwardRight && !hitForwardLeft && !hitForward && !hitRight && !hitLeft)
         {
-            float angle = Vector2.SignedAngle(Vector2.right, (Vector2)_target.Value.position-_shipPosition.Value);
+            float angle = Vector2.SignedAngle(Vector2.right, (Vector2)_target.Value - _shipPosition.Value);
             Debug.Log(angle);
-            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, _target.Value.position));
+            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, _target.Value));
             thrust = 1;
         }
 

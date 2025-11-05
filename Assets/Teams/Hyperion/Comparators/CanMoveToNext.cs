@@ -13,7 +13,7 @@ namespace HyperionTeam.Comparators
         public override TaskStatus OnUpdate()
         {
             int ownerId = (int)Owner.GetVariable("o_Owner").GetValue();
-            Vector2 spaceshipPosition = (Vector2)Owner.GetVariable("o_SpaceshipPosition").GetValue();
+            Vector2 spaceshipPosition = (Vector2)Owner.GetVariable("o_ShipPosition").GetValue();
 
             Vector2 closestWaypoint = WaypointPathingHelper.Instance.GetClosestWaypoint(spaceshipPosition, ownerId);
             Target.SetValue(closestWaypoint);
