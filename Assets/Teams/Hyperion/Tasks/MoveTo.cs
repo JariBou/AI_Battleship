@@ -58,13 +58,15 @@ public class MoveTo : Action
 
         float forwardAngle = Mathf.Deg2Rad * _shipOrientation.Value;
         Vector2 forward = new Vector2(Mathf.Cos(forwardAngle), Mathf.Sin(forwardAngle));
-        Vector2 right = new Vector2(Mathf.Cos(forwardAngle + 90 * Mathf.Deg2Rad), Mathf.Sin(forwardAngle + 90 * Mathf.Deg2Rad));
-        Vector2 left = new Vector2(Mathf.Cos(forwardAngle - 90 * Mathf.Deg2Rad), Mathf.Sin(forwardAngle - 90 * Mathf.Deg2Rad));
+        Vector2 middleForwardRight = new Vector2(Mathf.Cos(forwardAngle + 22.5f * Mathf.Deg2Rad), Mathf.Sin(forwardAngle + 22.5f * Mathf.Deg2Rad));
+        Vector2 middleForwardLeft = new Vector2(Mathf.Cos(forwardAngle - 22.5f * Mathf.Deg2Rad), Mathf.Sin(forwardAngle - 22.5f * Mathf.Deg2Rad));
         Vector2 forwardRight = new Vector2(Mathf.Cos(forwardAngle + 45 * Mathf.Deg2Rad), Mathf.Sin(forwardAngle + 45 * Mathf.Deg2Rad));
         Vector2 forwardLeft = new Vector2(Mathf.Cos(forwardAngle - 45 * Mathf.Deg2Rad), Mathf.Sin(forwardAngle - 45 * Mathf.Deg2Rad));
 
         float shortestDist = float.MaxValue;
         RaycastWrapper closestRaycast = new RaycastWrapper();
+
+
 
         RaycastHit2D hitForwardRight = Physics2D.Raycast(_shipPosition.Value, forwardRight, _raycastRange.Value, _layerMask.Value);
         if (hitForwardRight)
@@ -80,10 +82,11 @@ public class MoveTo : Action
         else Debug.DrawRay(_shipPosition.Value, forwardRight * _raycastRange.Value, Color.red);
 
 
+
         RaycastHit2D hitForwardLeft = Physics2D.Raycast(_shipPosition.Value, forwardLeft, _raycastRange.Value, _layerMask.Value);
         if (hitForwardLeft)
         {
-            Debug.Log((SharedFloat)(_shipOrientation.Value + _rotationSpeed.Value));
+            Debug.DrawRay(_shipPosition.Value, forwardRight * _raycastRange.Value, Color.green);
 
             if (hitForwardLeft.distance < shortestDist)
             {
@@ -91,7 +94,8 @@ public class MoveTo : Action
                 closestRaycast = new RaycastWrapper(hitForwardLeft, 45);
             }
         }
-        else Debug.DrawRay(_shipPosition.Value, forwardLeft * _raycastRange.Value, Color.blue);
+        else Debug.DrawRay(_shipPosition.Value, forwardLeft * _raycastRange.Value, Color.red);
+
 
 
         RaycastHit2D hitForward = Physics2D.Raycast(_shipPosition.Value, forward, _raycastRange.Value, _layerMask.Value);
@@ -124,35 +128,42 @@ public class MoveTo : Action
                 closestRaycast =  new RaycastWrapper(hitForward, angle);
             }
         }
-        else Debug.DrawRay(_shipPosition.Value, forward * _raycastRange.Value, Color.magenta);
+        else Debug.DrawRay(_shipPosition.Value, forward * _raycastRange.Value, Color.red);
 
-        /*RaycastHit2D hitRight = Physics2D.Raycast(_shipPosition.Value, right, _raycastRange.Value, _layerMask.Value);
-        if (hitRight)
+
+
+        RaycastHit2D hitmiddleForwardRight = Physics2D.Raycast(_shipPosition.Value, middleForwardRight, _raycastRange.Value, _layerMask.Value);
+        if (hitmiddleForwardRight)
         {
-            Debug.DrawRay(_shipPosition.Value, right * _raycastRange.Value, Color.green);
+            Debug.DrawRay(_shipPosition.Value, middleForwardRight * _raycastRange.Value, Color.green);
 
-            if (hitRight.distance < shortestDist)
+            if (hitmiddleForwardRight.distance < shortestDist)
             {
-                shortestDist = hitRight.distance;
-                closestRaycast = new RaycastWrapper(hitRight, -90);
+                shortestDist = hitmiddleForwardRight.distance;
+                closestRaycast = new RaycastWrapper(hitmiddleForwardRight, -22.5f);
             }
         }
-        else Debug.DrawRay(_shipPosition.Value, right * _raycastRange.Value, Color.cyan);*/
+        else Debug.DrawRay(_shipPosition.Value, middleForwardRight * _raycastRange.Value, Color.red);
 
-        /*RaycastHit2D hitLeft = Physics2D.Raycast(_shipPosition.Value, left, _raycastRange.Value, _layerMask.Value);
-        if (hitLeft)
+
+
+        RaycastHit2D hitmiddleForwardLeft = Physics2D.Raycast(_shipPosition.Value, middleForwardLeft, _raycastRange.Value, _layerMask.Value);
+        if (hitmiddleForwardLeft)
         {
-            Debug.DrawRay(_shipPosition.Value, left * _raycastRange.Value, Color.green);
+            Debug.DrawRay(_shipPosition.Value, middleForwardLeft * _raycastRange.Value, Color.green);
 
-            if (hitLeft.distance < shortestDist)
+            if (hitmiddleForwardLeft.distance < shortestDist)
             {
-                shortestDist = hitLeft.distance;
-                closestRaycast = new RaycastWrapper(hitLeft, 90);
+                shortestDist = hitmiddleForwardLeft.distance;
+                closestRaycast = new RaycastWrapper(hitmiddleForwardLeft, 22.5f);
             }
         }
-        else Debug.DrawRay(_shipPosition.Value, left * _raycastRange.Value, Color.yellow);*/
+        else Debug.DrawRay(_shipPosition.Value, middleForwardLeft * _raycastRange.Value, Color.red);
 
-            Debug.Log(closestRaycast.IsValid);
+
+
+
+        Debug.Log(closestRaycast.IsValid);
 
         if (closestRaycast.IsValid)
         {
@@ -160,7 +171,7 @@ public class MoveTo : Action
             thrust = 0;
         }
         
-        if (!hitForwardRight && !hitForwardLeft /*&& !hitForward && !hitRight && !hitLeft*/)
+        if (!hitForwardRight && !hitForwardLeft /*&& !hitForward*/ && !hitmiddleForwardRight && !hitmiddleForwardLeft)
         {
             float angle = Vector2.SignedAngle(Vector2.right, Target.Value - _shipPosition.Value);
             Debug.Log(angle);
