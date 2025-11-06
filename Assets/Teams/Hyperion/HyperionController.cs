@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using BehaviorDesigner.Runtime;
 using UnityEngine;
 using DoNotModify;
@@ -85,6 +86,8 @@ namespace HyperionTeam {
 			_behaviorTree.SetVariableValue("d_ShockwaveCooldown", 0f);
 			_behaviorTree.SetVariableValue("d_MineCooldown", 0f);
 			
+			_behaviorTree.SetVariableValue("o_WaypointsCount", data.WayPoints.Count);
+			_behaviorTree.SetVariableValue("o_CapturedWaypointsCount", data.WayPoints.Count(t => t.Owner == spaceship.Owner));
 		}
 	}
 
