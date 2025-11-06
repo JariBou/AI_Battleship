@@ -207,6 +207,10 @@ public class MoveToPath : Action
                 thrust = 1 - angle / 90;
             }
         }
+        if (closestRaycast.IsValid)
+        {
+            thrust = 1f;
+        }
         else
         {
             thrust = 0.0f;
