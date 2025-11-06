@@ -163,23 +163,36 @@ public class MoveTo : Action
 
 
 
-        Debug.Log(closestRaycast.IsValid);
+        //Debug.Log(closestRaycast.IsValid);
 
         if (closestRaycast.IsValid)
         {
             Owner.SetVariableValue("i_TargetOrientation", _shipOrientation.Value + closestRaycast.Angle);
-            thrust = 0;
-        }
-        
-        if (!hitForwardRight && !hitForwardLeft /*&& !hitForward*/ && !hitmiddleForwardRight && !hitmiddleForwardLeft)
-        {
-            float angle = Vector2.SignedAngle(Vector2.right, Target.Value - _shipPosition.Value);
-            Debug.Log(angle);
-            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, Target.Value));
-            thrust = 1;
         }
 
-        Owner.SetVariable("i_Thrust", thrust);
+        Vector2 targetRelativePos = Target.Value - _shipPosition.Value;
+
+
+        if (!hitForwardRight && !hitForwardLeft /*&& !hitForward*/ && !hitmiddleForwardRight && !hitmiddleForwardLeft)
+        {
+            float angle = Vector2.SignedAngle(Vector2.right, targetRelativePos);
+            //Debug.Log(angle);
+            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, Target.Value));
+        }
+
+        bool isInFront = Vector2.Dot(forward, targetRelativePos) > 0.0f;
+
+        if (isInFront)
+        {
+            float angle = Vector2.Angle(forward, targetRelativePos);
+            thrust = 1 - angle / 90;
+        }
+        else
+        {
+            thrust = 0.0f;
+        }
+
+            Owner.SetVariable("i_Thrust", thrust);
 
         return TaskStatus.Success;
 	}
