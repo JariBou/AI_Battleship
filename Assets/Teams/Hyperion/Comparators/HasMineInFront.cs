@@ -9,6 +9,7 @@ namespace HyperionTeam.Comparators
     public class HasMineInFront : Conditional
     {
         public SharedFloat Angle;
+        public SharedFloat MaxDistanceAlowed;
         public SharedFloat AngleTolerance = 5f;
         
         public override TaskStatus OnUpdate()
@@ -19,6 +20,7 @@ namespace HyperionTeam.Comparators
 
             foreach (MineView gameDataMine in gameData.Mines)
             {
+                if ((gameDataMine.Position - spaceShipForOwner.Position).magnitude > MaxDistanceAlowed.Value) continue;
                 if (ShootingHelpers.CanHit(spaceShipForOwner, gameDataMine.Position, out float angle) && angle < AngleTolerance.Value)
                 {
                     Angle.SetValue(angle);
