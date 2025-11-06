@@ -11,6 +11,8 @@ namespace HyperionTeam.Tasks
     public class TurnTowards : Action
     {
         public SharedVector2 TargetPosition;
+        public SharedVector2 TargetSpeed;
+        public SharedFloat OvershootAmount;
         
         public override TaskStatus OnUpdate()
         {
@@ -19,9 +21,9 @@ namespace HyperionTeam.Tasks
             SharedVariable targetRotation = Owner.GetVariable("i_TargetOrientation");
             SpaceShipView spaceShipForOwner = gameData.GetSpaceShipForOwner(ownerId);
 
-            Vector2 directionVec = new Vector2(Mathf.Cos(spaceShipForOwner.Orientation * Mathf.Deg2Rad), Mathf.Sin(spaceShipForOwner.Orientation * Mathf.Deg2Rad));
+            Vector2 directionVec = new (Mathf.Cos(spaceShipForOwner.Orientation * Mathf.Deg2Rad), Mathf.Sin(spaceShipForOwner.Orientation * Mathf.Deg2Rad));
 
-            Vector2 toTargetVec = TargetPosition.Value - spaceShipForOwner.Position;
+            Vector2 toTargetVec = TargetPosition.Value + TargetSpeed.Value * OvershootAmount.Value - spaceShipForOwner.Position;
             
             float deltaAngle = Vector2.SignedAngle(directionVec, toTargetVec);
             

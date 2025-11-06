@@ -16,6 +16,7 @@ namespace HyperionTeam
 
         public void Initialize(GameData gameData)
         {
+            _waypointPathing.Clear();
             _gameData = gameData;
             List<WayPointView> gameDataWayPoints = gameData.WayPoints;
             for (int i = 0; i < gameDataWayPoints.Count; i++)
