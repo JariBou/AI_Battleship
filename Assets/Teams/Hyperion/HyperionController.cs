@@ -80,6 +80,7 @@ namespace HyperionTeam {
 			_behaviorTree.SetVariableValue("o_CurrentEnergy", spaceship.Energy);
 			_behaviorTree.SetVariableValue("o_CurrentScore", GameManager.Instance.GetScoreForPlayer(spaceship.Owner));
 			_behaviorTree.SetVariableValue("o_DistanceToEnemy", (spaceship.Position - otherSpaceship.Position).magnitude);
+			_behaviorTree.SetVariableValue("o_EnemyPosition", otherSpaceship.Position);
 			_behaviorTree.SetVariableValue("o_EnemyEnergy", otherSpaceship.Energy);
 				
 			_behaviorTree.SetVariableValue("d_ShootCooldown", 0f);
