@@ -10,7 +10,7 @@ using UnityEngine;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 using Random = UnityEngine.Random;
 
-public class MoveTo : Action
+public class MoveToPath : Action
 {
 	public SharedVector2 targetRotation;
     public SharedFloat thrust;
@@ -67,6 +67,18 @@ public class MoveTo : Action
         float shortestDist = float.MaxValue;
         RaycastWrapper closestRaycast = new RaycastWrapper();
 
+        Path path = WaypointPathingHelper.Instance.GetNextPath(_shipPosition.Value, spaceShipForOwner.Owner);
+        if (path.WayPoints.Count > 1)
+        {
+            Vector2 newTarget = Vector2.Lerp(Target.Value, path.WayPoints[1].Position, (1 - thrust.Value) / 2);
+            //Vector2 newTarget = Vector2.Lerp(_shipPosition.Value, path.WayPoints[1].Position, 1 - thrust.Value);
+            //Vector2 newTarget = Vector2.Lerp(path.WayPoints[0].Position, path.WayPoints[1].Position, 1 - thrust.Value);
+            Owner.SetVariableValue("Target", newTarget);
+        }
+
+
+        
+
         RaycastHit2D hitForwardRight = Physics2D.Raycast(_shipPosition.Value, forwardRight, _raycastRange.Value, _layerMask.Value);
         if (hitForwardRight)
         {
@@ -110,11 +122,11 @@ public class MoveTo : Action
 
                 if (angleNormalRaycast > 0.0f) 
                 {
-                    angle = 90;
+                    angle = -90;
                 }
                 else if(angleNormalRaycast < 0.0f)
                 {
-                    angle = -90;
+                    angle = 90;
                 }
                 else if(angleNormalRaycast == 0.0f)
                 {
@@ -176,7 +188,7 @@ public class MoveTo : Action
         {
             float angle = Vector2.SignedAngle(Vector2.right, targetRelativePos);
             //Debug.Log(angle);
-            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, Target.Value));
+            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, Target.Value, 2));
         }
 
         bool isInFront = Vector2.Dot(forward, targetRelativePos) > 0.0f;
