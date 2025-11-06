@@ -1,11 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-using BehaviorDesigner.Runtime.Tasks.Unity.UnityQuaternion;
 using DoNotModify;
-using HyperionTeam;
-using HyperionTeam.SharedVariables;
-using System;
-using System.Diagnostics.Eventing.Reader;
 using UnityEngine;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 using Random = UnityEngine.Random;
@@ -46,7 +41,7 @@ public class MoveTo : Action
         spaceShipForOwner = gameData.GetSpaceShipForOwner(ownerId);
 
         base.OnStart();
-	}
+    }
 
 	public override TaskStatus OnUpdate()
 	{
@@ -64,7 +59,7 @@ public class MoveTo : Action
         Vector2 forwardRight = new Vector2(Mathf.Cos(forwardAngle + 45 * Mathf.Deg2Rad), Mathf.Sin(forwardAngle + 45 * Mathf.Deg2Rad));
         Vector2 forwardLeft = new Vector2(Mathf.Cos(forwardAngle - 45 * Mathf.Deg2Rad), Mathf.Sin(forwardAngle - 45 * Mathf.Deg2Rad));
 
-        float shortestDist = float.MaxValue;
+        /*float shortestDist = float.MaxValue;
         RaycastWrapper closestRaycast = new RaycastWrapper();
 
         RaycastHit2D hitForwardRight = Physics2D.Raycast(_shipPosition.Value, forwardRight, _raycastRange.Value, _layerMask.Value);
@@ -166,18 +161,55 @@ public class MoveTo : Action
 
         if (closestRaycast.IsValid)
         {
+            lastAngleToDodge = closestRaycast.Angle;
             Owner.SetVariableValue("i_TargetOrientation", _shipOrientation.Value + closestRaycast.Angle);
-        }
+        }*/
 
         Vector2 targetRelativePos = Target.Value - _shipPosition.Value;
 
+        RaycastHit2D circleCast = Physics2D.CircleCast(_shipPosition.Value, spaceShipForOwner.Radius * 1.1f, forward, _raycastRange.Value, _layerMask.Value);
+        if (circleCast)
+        {
+            Debug.DrawLine(_shipPosition.Value, _shipPosition.Value + (forward * _raycastRange.Value), Color.green, Time.deltaTime);
 
-        if (!hitForwardRight && !hitForwardLeft /*&& !hitForward*/ && !hitmiddleForwardRight && !hitmiddleForwardLeft)
+            Debug.Log(circleCast.transform.gameObject.name);
+
+            float angleNormalRaycast = Vector2.SignedAngle(circleCast.normal, forward * spaceShipForOwner.Radius);
+
+            float angle = 0.0f;
+
+            if (angleNormalRaycast > 0.0f)
+            {
+                angle = -90;
+            }
+            else if (angleNormalRaycast < 0.0f)
+            {
+                angle = 90;
+            }
+            else if (angleNormalRaycast == 0.0f)
+            {
+                float rand = Random.Range(0.0f, 1.0f);
+                angle = rand > 0.5f ? 90 : -90;
+            }
+
+            Owner.SetVariableValue("i_TargetOrientation", _shipOrientation.Value + angle);
+        }
+        else
+        {
+            Debug.DrawLine(_shipPosition.Value, _shipPosition.Value + (forward * _raycastRange.Value), Color.red, Time.deltaTime);
+
+            float angle = Vector2.SignedAngle(Vector2.right, targetRelativePos);
+            //Debug.Log(angle);
+            Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, Target.Value, 1.5f));
+        }
+
+
+/*        if (!hitForwardRight && !hitForwardLeft *//*&& !hitForward*//* && !hitmiddleForwardRight && !hitmiddleForwardLeft)
         {
             float angle = Vector2.SignedAngle(Vector2.right, targetRelativePos);
             //Debug.Log(angle);
             Owner.SetVariable("i_TargetOrientation", (SharedFloat)AimingHelpers.ComputeSteeringOrient(spaceShipForOwner, Target.Value));
-        }
+        }*/
 
         bool isInFront = Vector2.Dot(forward, targetRelativePos) > 0.0f;
 
