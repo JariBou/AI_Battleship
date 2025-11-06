@@ -17,6 +17,9 @@ namespace HyperionTeam {
 			_behaviorTree = GetComponent<BehaviorTree>();
 			_behaviorTree.SetVariableValue("o_GameData", data);
 			_behaviorTree.SetVariableValue("o_Owner", spaceship.Owner);
+			_behaviorTree.SetVariable("d_ShootCooldown", (SharedFloat)0f);
+			_behaviorTree.SetVariable("d_ShockwaveCooldown", (SharedFloat)0f);
+			_behaviorTree.SetVariable("d_MineCooldown", (SharedFloat)0f);
 	
 			UpdateBlackboardData(spaceship, data);
 		}

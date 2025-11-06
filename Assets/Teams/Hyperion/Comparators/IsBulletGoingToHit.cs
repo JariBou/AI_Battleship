@@ -3,6 +3,7 @@ using BehaviorDesigner.Runtime.Tasks;
 using DoNotModify;
 using HyperionTeam.Helpers;
 using HyperionTeam.SharedVariables;
+using UnityEngine;
 
 namespace HyperionTeam.Comparators
 {
@@ -12,6 +13,7 @@ namespace HyperionTeam.Comparators
         public SharedFloat HitTimeTolerance = 0.15f;
         public SharedFloat RangeTolerance = 3f;
         public SharedBulletView IncomingBulletView;
+        public SharedFloat IncomingBulletAngle;
         
         public override TaskStatus OnUpdate()
         {
@@ -25,6 +27,10 @@ namespace HyperionTeam.Comparators
             {
                 if (ShootingHelpers.WillHit(spaceShipForOwner, bulletView.Position, bulletView.Velocity, HitTimeTolerance.Value, RangeTolerance.Value))
                 {
+                    float shipOrientation = spaceShipForOwner.Orientation * Mathf.Deg2Rad;
+                    Vector2 orientation = new Vector2(Mathf.Cos(shipOrientation), Mathf.Sin(shipOrientation));
+                    float angle = Vector2.Angle(orientation, -bulletView.Velocity);
+                    IncomingBulletAngle.SetValue(angle);
                     IncomingBulletView.SetValue(bulletView);
                     return TaskStatus.Success; 
                 }
