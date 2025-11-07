@@ -57,7 +57,7 @@ public class MoveTo : Action
         {
             Debug.DrawLine(_shipPosition.Value, _shipPosition.Value + (forward * _raycastRange.Value), Color.green, Time.deltaTime);
 
-            Debug.Log(circleCast.transform.gameObject.name);
+            // Debug.Log(circleCast.transform.gameObject.name);
 
             float angleNormalRaycast = Vector2.SignedAngle(circleCast.normal, forward * spaceShipForOwner.Radius);
 
