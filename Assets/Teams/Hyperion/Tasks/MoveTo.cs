@@ -220,11 +220,11 @@ public class MoveTo : Action
 
             if (distance < 3.0f) 
             {
-                thrust = 1 - (angle + distance) / (90 + 3.0f);
+                thrust = 1 - (angle + distance) / (120 + 3.0f);
             }
             else
             {
-                thrust = 1 - angle / 90;
+                thrust = 1 - angle / 120;
             }
         }
         else
