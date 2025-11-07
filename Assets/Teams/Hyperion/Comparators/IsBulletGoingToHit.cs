@@ -12,7 +12,7 @@ namespace HyperionTeam.Comparators
     {
         public SharedFloat HitTimeTolerance = 0.15f;
         public SharedFloat RangeTolerance = 3f;
-        public SharedBulletView IncomingBulletView;
+        public SharedBulletViewWrapper IncomingBulletView;
         public SharedFloat IncomingBulletAngle;
         
         public override TaskStatus OnUpdate()
@@ -31,7 +31,7 @@ namespace HyperionTeam.Comparators
                     Vector2 orientation = new Vector2(Mathf.Cos(shipOrientation), Mathf.Sin(shipOrientation));
                     float angle = Vector2.Angle(orientation, -bulletView.Velocity);
                     IncomingBulletAngle.SetValue(angle);
-                    IncomingBulletView.SetValue(bulletView);
+                    IncomingBulletView.SetValue(new BulletViewWrapper(bulletView));
                     return TaskStatus.Success; 
                 }
             }
