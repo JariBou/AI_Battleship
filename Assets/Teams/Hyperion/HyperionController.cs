@@ -43,7 +43,7 @@ namespace HyperionTeam {
 			
             SpaceShipView otherSpaceship = data.GetSpaceShipForOwner(1 - spaceship.Owner);
 			Vector2 closestWaypoint = WaypointPathingHelper.Instance.GetClosestWaypoint(spaceship.Position, spaceship.Owner);
-			Debug.Log($"Vector: {closestWaypoint}");
+			//Debug.Log($"Vector: {closestWaypoint}");
 			// float targetRotation = spaceship.Orientation + 90.0f;
 
 			// (float)_behaviorTree.GetVariable("o_ShootCooldown");
