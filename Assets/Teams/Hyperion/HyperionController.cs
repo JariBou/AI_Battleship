@@ -85,9 +85,9 @@ namespace HyperionTeam {
 			_behaviorTree.SetVariableValue("o_EnemyShot", otherSpaceship.HasShot);
 			_behaviorTree.SetVariableValue("o_EnemyEnergy", otherSpaceship.Energy);
 				
-			_behaviorTree.SetVariableValue("d_ShootCooldown", 0f);
+/*			_behaviorTree.SetVariableValue("d_ShootCooldown", 0f);
 			_behaviorTree.SetVariableValue("d_ShockwaveCooldown", 0f);
-			_behaviorTree.SetVariableValue("d_MineCooldown", 0f);
+			_behaviorTree.SetVariableValue("d_MineCooldown", 0f);*/
 			
 			_behaviorTree.SetVariableValue("o_WaypointsCount", data.WayPoints.Count);
 			_behaviorTree.SetVariableValue("o_CapturedWaypointsCount", data.WayPoints.Count(t => t.Owner == spaceship.Owner));
